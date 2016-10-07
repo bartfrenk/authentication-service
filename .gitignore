@@ -1,0 +1,12 @@
+*.o
+*.hi
+
+app/server/Main
+app/migrate/Main
+
+config/
+scratch/
+
+config.yaml
+
+.dir-locals.el

@@ -1,0 +1,48 @@
+* Notes
+
+** Use HSTS
+
+1. Add the header Strict-Transport-Security to the response
+2. The value is the number of seconds that the browser should only interact with
+   the site using HTTPS. [1]
+
+** Set the secure flag in a cookie [1]
+
+
+** Authenticate user safely
+   
+- authentication
+- authorization
+- session management
+
+When a user makes a mistake entering their username or password, we might see a
+website respond with a message like this: The user ID is unknown. Revealing
+whether a user exists can help an attacker enumerate accounts on our system to
+mount further attacks against them or, depending on the nature of the site,
+revealing the user has an account may compromise their privacy. A better, more
+generic, response might be: Incorrect user ID or password.
+
+** Account data [2]
+
+Often your centralized authentication system will store the following information:
+
+    ID
+    first name
+    last name
+    login/nickname
+    email
+    hashed password
+    salt
+    creation timestamp
+    update timestamp
+    account state (verified, disabled …)
+
+For security reasons, you might want to white list the domains you allow your
+authentication app to redirect to. [2]
+
+
+* Sources
+[1] [[martinfowler.com/articles/web-security-basics.html]]
+[2] http://merbist.com/2012/04/04/building-and-implementing-a-single-sign-on-solution/
+
+
