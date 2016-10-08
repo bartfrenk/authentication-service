@@ -55,7 +55,7 @@ data AuthErr
   | DuplicateUserName
   | InvalidUserName
   | InvalidPassword
-  | SignError
+  | SignError deriving (Show)
 
 type Signature = ByteString
 

@@ -15,9 +15,9 @@ import Authentication
 
 type AuthenticationAPI
      = "authenticate" :> ReqBody '[JSON] Credentials
-                      :> Get '[JSON] AuthToken
+                      :> Post '[JSON] AuthToken
   :<|> "register"     :> ReqBody '[JSON] Credentials
-                      :> Get '[JSON] UserToken
+                      :> Post '[JSON] UserToken
 
 api :: Proxy AuthenticationAPI
 api = Proxy
