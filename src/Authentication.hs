@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE DuplicateRecordFields #-}
 
 module Authentication
   ( AuthToken
@@ -21,36 +20,10 @@ import Data.ByteString (ByteString)
 import Data.Text
 import Data.Text.Encoding (encodeUtf8)
 import Data.Time.Clock (getCurrentTime)
-import Data.Word8 (Word8)
 
 import Entities
+import Types
 import Utils (withExceptC)
-
--- DISCLAIMER: probably not resistant to timing attacks
--- TODO: Timing attacks that determine whether user account exists
-data Credentials = Credentials
-  { name :: Text
-  , password :: Text
-  } deriving (Eq, Show)
-
-data Claim =
-  Claim KeyID
-        UserToken
-
-data AuthErr
-  = UnknownUserName Text
-  | NonMatchingPassword
-  | DuplicateUserName
-  | InvalidUserName
-  | InvalidPassword
-  | SignError
-
-newtype AuthToken =
-  AuthToken ByteString
-
-type UserToken = ByteString
-
-type KeyID = Word8
 
 register
   :: (MonadError AuthErr m, MonadIO m, MonadRandom m)
@@ -102,21 +75,23 @@ getPrivateKey _ = snd `fmap` liftIO get
 createAuthToken
   :: (MonadError AuthErr m, MonadIO m, MonadRandom m)
   => KeyID -> User -> m AuthToken
-createAuthToken keyID user = signClaim (createClaim keyID user)
+createAuthToken keyID user = do
+  let claim = createClaim user
+  signature <- signClaim keyID claim
+  return $ AuthToken keyID claim signature
 
-createClaim :: KeyID -> User -> Claim
-createClaim keyID user = Claim keyID (Entities.userToken user)
+createClaim :: User -> Claim
+createClaim user = Claim (Entities.userToken user)
 
 signClaim
   :: (MonadError AuthErr m, MonadIO m, MonadRandom m)
-  => Claim -> m AuthToken
-signClaim claim@(Claim keyID _) = do
+  => KeyID -> Claim -> m Signature
+signClaim keyID claim = do
   let enc = encodeClaim claim
   pk <- getPrivateKey keyID
-  signature <- withExceptC (const SignError) (sign pk enc)
-  return $ AuthToken (BS.append enc signature)
+  withExceptC (const SignError) (sign pk enc)
   where
     sign = PSS.sign Nothing (PSS.defaultPSSParams SHA256)
 
 encodeClaim :: Claim -> ByteString
-encodeClaim (Claim keyID token) = BS.cons keyID token
+encodeClaim (Claim token) = token

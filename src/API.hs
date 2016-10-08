@@ -18,3 +18,6 @@ type AuthenticationAPI
                       :> Get '[OctetStream] AuthToken
   :<|> "register"     :> ReqBody '[JSON] Credentials
                       :> Get '[JSON] UserToken
+
+api :: Proxy AuthenticationAPI
+api = Proxy
