@@ -21,7 +21,9 @@ import Data.Time.Clock
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 User
   name Text
+  UniqueName name
   token ByteString
+  UniqueToken token
   hash ByteString
   salt ByteString
   registered UTCTime

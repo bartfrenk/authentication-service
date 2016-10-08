@@ -31,7 +31,7 @@ handleAuthenticate
   => Credentials -> SqlPersistT m AuthToken
 handleAuthenticate creds@(Credentials nm _) = do
   $(logInfo) $ append "Attempting to authenticate user " nm
-  user <- failWithC (UnknownUserName nm) (getUser nm)
+  user <- failWithC (UnknownUserName nm) (getUserByName nm)
   lift (authenticate user creds)
 
 handleRegister

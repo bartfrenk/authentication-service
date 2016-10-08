@@ -8,8 +8,15 @@ Authentication Service written in Haskell. Not usable yet.
 
 ### Essentials
 
-- key management,
-- persistent storage
+For completeness:
+
+- key management
+
+For security:
+
+Different list as is this project is for now an experiment. Long list,
+implementing which might lead to the conclusion that Haskell is not the
+appropriate language to do this in.
 
 ### Ideas
 
