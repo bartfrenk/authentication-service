@@ -6,6 +6,7 @@ module Main where
 import Control.Monad.Except
 import Control.Monad.Logger
 import Control.Monad.Trans.Control (MonadBaseControl)
+import Network.Wai.Handler.Warp (run)
 
 import Database.Persist.Postgresql
 import Data.ByteString (ByteString)
@@ -16,12 +17,17 @@ import Handlers
 import Orphans ()
 
 main :: IO ()
-main = putStrLn "Authentication server"
+main = do
+  putStrLn "Authentication server"
+  run tcpPort $ serve api (server "asdsa")
 
 server :: ByteString -> Server AuthenticationAPI
-server connStr = enter (Nat run) (handleAuthenticate :<|> handleRegister)
+server connStr = enter (Nat f) (handleAuthenticate :<|> handleRegister)
   where
-    run = withExceptT toServantErr . runStdoutLoggingT . runPostgreSql connStr 10
+    f = withExceptT toServantErr . runStdoutLoggingT . runPostgreSql connStr 10
+
+tcpPort :: Int
+tcpPort = 8000
 
 runPostgreSql
   :: (MonadIO m, MonadBaseControl IO m, MonadLogger m)

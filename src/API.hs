@@ -15,7 +15,7 @@ import Authentication
 
 type AuthenticationAPI
      = "authenticate" :> ReqBody '[JSON] Credentials
-                      :> Get '[OctetStream] AuthToken
+                      :> Get '[JSON] AuthToken
   :<|> "register"     :> ReqBody '[JSON] Credentials
                       :> Get '[JSON] UserToken
 

@@ -2,7 +2,7 @@
 
 module Authentication
   ( AuthToken
-  , UserToken
+  , UserToken(..)
   , Credentials(..)
   , AuthErr(..)
   , authenticate
@@ -93,5 +93,3 @@ signClaim keyID claim = do
   where
     sign = PSS.sign Nothing (PSS.defaultPSSParams SHA256)
 
-encodeClaim :: Claim -> ByteString
-encodeClaim (Claim token) = token

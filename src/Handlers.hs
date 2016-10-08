@@ -36,9 +36,9 @@ handleAuthenticate creds@(Credentials nm _) = do
 
 handleRegister
   :: (MonadError AuthErr m, MonadIO m, MonadLogger m, MonadRandom m)
-  => Credentials -> SqlPersistT m ByteString
+  => Credentials -> SqlPersistT m UserToken
 handleRegister creds@(Credentials nm _) = do
   $(logInfo) $ append "attempting to register user " nm
   user <- lift (register creds)
   storeUser user
-  return (userToken user)
+  return (UserToken $ userToken user)
