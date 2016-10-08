@@ -9,4 +9,9 @@ scratch/
 
 config.yaml
 
+# Emacs
 .dir-locals.el
+.tern-port
+
+# Testing
+creds.json
