@@ -18,7 +18,7 @@ library
   exposed-modules:     API
                        Handlers
                        Authentication
-                       Database
+                       Store
                        Entities
                        Utils
                        Orphans

@@ -13,32 +13,38 @@ module Handlers
   , handleRegister
   ) where
 
-import Control.Monad.Except
-import Control.Monad.Logger
+import Control.Monad.Except (MonadError)
+import Control.Monad.Logger (MonadLogger, logInfo)
 import Control.Monad.Trans (MonadIO)
 import Crypto.Random (MonadRandom)
-import Data.ByteString (ByteString)
-import Data.Text
-import Database.Persist.Sql
+import Data.Text (append)
 
 import Authentication
-import Database
 import Entities (userToken)
 import Utils (failWithC)
+import Store (MonadAuthStore(..))
 
 handleAuthenticate
-  :: (MonadError AuthErr m, MonadIO m, MonadLogger m, MonadRandom m)
-  => Credentials -> SqlPersistT m AuthToken
+  :: (MonadAuthStore m
+     ,MonadError AuthErr m
+     ,MonadIO m
+     ,MonadLogger m
+     ,MonadRandom m)
+  => Credentials -> m AuthToken
 handleAuthenticate creds@(Credentials nm _) = do
   $(logInfo) $ append "Attempting to authenticate user " nm
   user <- failWithC (UnknownUserName nm) (getUserByName nm)
-  lift (authenticate user creds)
+  authenticate user creds
 
 handleRegister
-  :: (MonadError AuthErr m, MonadIO m, MonadLogger m, MonadRandom m)
-  => Credentials -> SqlPersistT m UserToken
+  :: (MonadAuthStore m
+     ,MonadError AuthErr m
+     ,MonadIO m
+     ,MonadLogger m
+     ,MonadRandom m)
+  => Credentials -> m UserToken
 handleRegister creds@(Credentials nm _) = do
   $(logInfo) $ append "attempting to register user " nm
-  user <- lift (register creds)
+  user <- register creds
   storeUser user
   return (UserToken $ userToken user)

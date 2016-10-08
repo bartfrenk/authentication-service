@@ -2,24 +2,17 @@
 
 ## Description
 
-Authentication Service written in Haskell. Not usable yet.
+Experimental authentication service written in Haskell. Registration and
+authentication by name and password.
 
-## Roadmap
+## Next
 
-### Essentials
+Incomplete list of things on my mind:
 
-For completeness:
-
-- key management
-
-For security:
-
-Different list as is this project is for now an experiment. Long list,
-implementing which might lead to the conclusion that Haskell is not the
-appropriate language to do this in.
-
-### Ideas
-
-- swap PSS for Ed25519 signatures (faster, shorter key lengths),
-- harden against timing attacks,
-- support for authorization schemes
+- handle error on inserting duplicate name,
+- translate authentication errors to HTTP responses,
+- swap PSS for Ed25519 signatures,
+- key management,
+- automatic tests,
+- support for authorization schemes,
+- harden against timing attacks.
